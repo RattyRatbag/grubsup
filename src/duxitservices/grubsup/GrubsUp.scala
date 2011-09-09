@@ -1,43 +1,40 @@
 package duxitservices.grubsup
 
-import gui.RecipePanel
-import swing.GridBagPanel.Fill
+import gui.{RecipeList, RecipePanel}
 import swing._
 import xml.{Node, XML}
+import java.io.File
 
 /**
  * @author David Edmonds <edmonds.d.r@gmail.com>
  */
 
 object GrubsUp extends SimpleSwingApplication {
-  lazy val ui = new GridBagPanel {
-    val c = new Constraints {
-      weightx = 0.5
-      weighty = 0
-      ipadx = 5
-      ipady = 5
-      fill = Fill.Both
-    }
-
-    c.gridy = 0
-    c.gridx = 0
-    layout(new FlowPanel {
+  lazy val ui = new BorderPanel {
+    add(new FlowPanel {
       contents += new Button(Action.apply("New Recipe") {
         recipePanel.clear()
       })
       contents += new Button(Action.apply("Save Recipe") {
-        try{
-          XML.save("recipes/" + recipePanel.title.text + ".xml", generateXml())
-        } catch {
-          case e: Exception => e.printStackTrace()
+        val file = new File("recipes/" + recipePanel.title.text + ".xml")
+        if (file.exists()) {
+          if (Dialog.showConfirmation(this, "Are you sure you wish to overwrite " + file.getName, "Overwrite file?") == Dialog.Result.Yes) {
+            save(file)
+          }
+        } else {
+          save(file)
         }
+        recipeList.rebuildList()
       })
-    }) = c
+    }, BorderPanel.Position.North)
 
-    c.gridy += 1
-    c.weighty = 1
+    val recipeList = new RecipeList
+    add(new ScrollPane(recipeList) {
+      horizontalScrollBarPolicy = ScrollPane.BarPolicy.Never
+    }, BorderPanel.Position.West)
+
     val recipePanel = new RecipePanel
-    layout(recipePanel) = c
+    add(recipePanel, BorderPanel.Position.Center)
 
     def generateXml(): Node =
       <recipe>
@@ -51,10 +48,18 @@ object GrubsUp extends SimpleSwingApplication {
           {recipePanel.method.text}
         </method>
       </recipe>
+
+    def save(file: File) {
+      try {
+        XML.save(file.getAbsolutePath, generateXml(), "UTF-8")
+      } catch {
+        case e: Exception => e.printStackTrace()
+      }
+    }
   }
 
   def top = new MainFrame {
     contents = ui
-    title = "Grubs Up! v0.1"
+    title = "Grubs Up! v0.2"
   }
 }
