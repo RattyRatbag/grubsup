@@ -39,10 +39,12 @@ class RecipeList extends BorderPanel {
     val files = recipeFolder.listFiles(new FilenameFilter {
       def accept(file: File, fileName: String) = fileName.endsWith(".xml")
     })
-    files.foreach {
-      case f: File =>
-        val xml = XML.loadFile(f)
-        recipes += Recipe((xml \ "title").text.trim, (xml \ "ingredients").text.trim, (xml \ "method").text.trim)
+    if (files != null) {
+      files.foreach {
+        case f: File =>
+          val xml = XML.loadFile(f)
+          recipes += Recipe((xml \ "title").text.trim, (xml \ "ingredients").text.trim, (xml \ "method").text.trim)
+      }
     }
     recipes.sortWith(_.title < _.title)
   }
