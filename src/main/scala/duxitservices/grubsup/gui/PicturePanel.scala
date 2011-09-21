@@ -31,7 +31,7 @@ class PicturePanel extends BorderPanel {
 
   add(new FlowPanel {
     contents += new Button {
-      action = Action.apply("") {
+      action = Action.apply("Add Picture") {
         val result = chooser.showOpenDialog(this)
         if (result == FileChooser.Result.Approve) {
           pictureList += new Picture(chooser.selectedFile.getAbsolutePath, pictureListView.listData.length)
@@ -42,7 +42,7 @@ class PicturePanel extends BorderPanel {
       icon = new ImageIcon("images/Add.png")
     }
     contents += new Button {
-      action = Action.apply("") {
+      action = Action.apply("Delete Picture") {
         // Remove selected picture
       }
       icon = new ImageIcon("images/Delete.png")

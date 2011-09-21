@@ -6,6 +6,7 @@ import duxitservices.grubsup.entities.Recipe
 import java.io.File
 import duxitservices.grubsup.GrubsUp
 import xml.{NodeBuffer, XML, Node}
+import javax.swing.ImageIcon
 
 /**
  * @author David Edmonds <edmonds.d.r@gmail.com>
@@ -33,20 +34,26 @@ class RecipePanel extends GridBagPanel {
   c.gridy = 0
   c.gridwidth = 2
   layout(new FlowPanel {
-    contents += new Button(Action.apply("New Recipe") {
-      clear()
-    })
-    contents += new Button(Action.apply("Save Recipe") {
-      val file = new File("recipes/" + title.text + ".xml")
-      if (file.exists()) {
-        if (Dialog.showConfirmation(this, "Are you sure you wish to overwrite " + file.getName, "Overwrite file?") == Dialog.Result.Yes) {
+    contents += new Button {
+      action = Action.apply("New Recipe") {
+        clear()
+      }
+      icon = new ImageIcon("images/New.png")
+    }
+    contents += new Button{
+      action = Action.apply("Save Recipe") {
+        val file = new File("recipes/" + title.text + ".xml")
+        if (file.exists()) {
+          if (Dialog.showConfirmation(this, "Are you sure you wish to overwrite " + file.getName, "Overwrite file?") == Dialog.Result.Yes) {
+            save(file)
+          }
+        } else {
           save(file)
         }
-      } else {
-        save(file)
+        GrubsUp.ui.recipeList.rebuildList()
       }
-      GrubsUp.ui.recipeList.rebuildList()
-    })
+      icon = new ImageIcon("images/Save.png")
+    }
   }) = c
 
   c.gridx = 0

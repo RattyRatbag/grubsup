@@ -7,6 +7,7 @@ import duxitservices.grubsup.GrubsUp
 import swing._
 import xml.{Elem, XML}
 import duxitservices.grubsup.entities.{Picture, Recipe}
+import javax.swing.ImageIcon
 
 /**
  * Panel containing a Recipe List, and also a toolbar for loading/deleting recipes
@@ -21,16 +22,22 @@ class RecipeList extends BorderPanel {
   }, Position.Center)
 
   add(new FlowPanel {
-    contents += new Button(Action.apply("Load Recipe") {
-      GrubsUp.ui.recipePanel.loadRecipe(recipeList.selection.items.head)
-    })
-    contents += new Button(Action.apply("Delete Recipe") {
-      val file = new File("recipes/" + recipeList.selection.items.head.title + ".xml")
-      if (file.exists() && Dialog.showConfirmation(this, "Are you sure you wish to delete " + file.getName, "Delete file?") == Dialog.Result.Yes) {
-        file.delete()
+    contents += new Button{
+      action = Action.apply("Load Recipe") {
+        GrubsUp.ui.recipePanel.loadRecipe(recipeList.selection.items.head)
       }
-      rebuildList()
-    })
+      icon = new ImageIcon("images/Load.png")
+    }
+    contents += new Button{
+      action = Action.apply("Delete Recipe") {
+        val file = new File("recipes/" + recipeList.selection.items.head.title + ".xml")
+        if (file.exists() && Dialog.showConfirmation(this, "Are you sure you wish to delete " + file.getName, "Delete file?") == Dialog.Result.Yes) {
+          file.delete()
+        }
+        rebuildList()
+      }
+      icon = new ImageIcon("images/Delete.png")
+    }
   }, Position.North)
 
   def getAllRecipes: Seq[Recipe] = {
