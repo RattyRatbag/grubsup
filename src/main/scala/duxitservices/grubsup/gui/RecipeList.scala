@@ -1,12 +1,12 @@
 package duxitservices.grubsup.gui
 
-import duxitservices.grubsup.entities.Recipe
 import swing.BorderPanel.Position
 import java.io.{FilenameFilter, File}
 import collection.mutable.ArrayBuffer
-import xml.XML
 import duxitservices.grubsup.GrubsUp
 import swing._
+import xml.{Elem, XML}
+import duxitservices.grubsup.entities.{Picture, Recipe}
 
 /**
  * Panel containing a Recipe List, and also a toolbar for loading/deleting recipes
@@ -43,10 +43,18 @@ class RecipeList extends BorderPanel {
       files.foreach {
         case f: File =>
           val xml = XML.loadFile(f)
-          recipes += Recipe((xml \ "title").text.trim, (xml \ "ingredients").text.trim, (xml \ "method").text.trim)
+          recipes += Recipe((xml \ "title").text.trim, (xml \ "ingredients").text.trim, (xml \ "method").text.trim, buildPictureList(xml))
       }
     }
     recipes.sortWith(_.title < _.title)
+  }
+
+  def buildPictureList(xml: Elem): ArrayBuffer[Picture] = {
+    val pictures = new ArrayBuffer[Picture]
+    (xml \\ "picture").foreach {
+      case p => pictures += Picture((p \ "fileName").text.trim, (p \ "order").text.trim.toInt)
+    }
+    pictures
   }
 
   def rebuildList() {

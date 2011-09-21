@@ -4,8 +4,8 @@ import swing.GridBagPanel.Fill
 import swing._
 import duxitservices.grubsup.entities.Recipe
 import java.io.File
-import xml.{XML, Node}
 import duxitservices.grubsup.GrubsUp
+import xml.{NodeBuffer, XML, Node}
 
 /**
  * @author David Edmonds <edmonds.d.r@gmail.com>
@@ -88,6 +88,7 @@ class RecipePanel extends GridBagPanel {
     title.text = recipe.title
     ingredients.text = recipe.ingredients
     method.text = recipe.method
+    GrubsUp.ui.picturePanel.loadPictures(recipe.pictures)
   }
 
   def generateXml(): Node =
@@ -101,7 +102,18 @@ class RecipePanel extends GridBagPanel {
       <method>
         {method.text}
       </method>
+      <pictures>
+        {buildPictures}
+      </pictures>
     </recipe>
+
+  def buildPictures = {
+    val result = new NodeBuffer
+    GrubsUp.ui.picturePanel.pictureList.foreach {
+      case pic => result += <picture><fileName>{pic.fileName}</fileName><order>{pic.order}</order></picture>
+    }
+    result
+  }
 
   def save(file: File) {
     try {
