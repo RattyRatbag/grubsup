@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="grubsup:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/grubsup_jar</output-path>
+    <root id="archive" name="grubsup.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="grubsup" />
+      <element id="extracted-dir" path="/usr/share/java/scala-swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/share/java/scala-library.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/share/java/scala-dbc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/share/java/scala-partest.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/share/java/scalap.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
